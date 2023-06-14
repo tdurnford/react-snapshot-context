@@ -1,10 +1,16 @@
-import React, { Fragment } from 'react';
+import React from 'react';
+import { NumberContext } from './contexts/NumberContext';
+import { Number } from './contexts/NumberContext/components/Number';
+import { Increase } from './contexts/NumberContext/components/Increase';
+import { Decrease } from './contexts/NumberContext/components/Decrease';
 
 const App = () => {
   return (
-    <Fragment>
-      <div>Hello world</div>
-    </Fragment>
+    <NumberContext.Provider value={0}>
+      <Number />
+      <Increase />
+      <Decrease />
+    </NumberContext.Provider>
   );
 };
 
