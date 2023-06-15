@@ -1,7 +1,7 @@
 {
   "name": "react-snapshot-context",
   "version": "0.0.0-0",
-  "description": "Creates higher-order component for wrapping component in another component.",
+  "description": "A React Context Provider for efficient state management and sharing across components. It provides a snapshot mechanism for state updates, ensuring only the dependent components are re-rendered, enhancing the performance and manageability of your React applications.",
   "files": [
     "./lib/*"
   ],
@@ -11,10 +11,10 @@
       "require": "./lib/commonjs/index.js",
       "types": "./lib/types/index.d.ts"
     },
-    "./wrapWith": {
-      "import": "./lib/esmodules/wrapWith.js",
-      "require": "./lib/commonjs/wrapWith.js",
-      "types": "./lib/types/wrapWith.d.ts"
+    "./createSnapshotContext": {
+      "import": "./lib/esmodules/createSnapshotContext.js",
+      "require": "./lib/commonjs/createSnapshotContext.js",
+      "types": "./lib/types/createSnapshotContext.d.ts"
     }
   },
   "main": "./lib/commonjs/index.js",
@@ -44,11 +44,22 @@
     "url": "git+https://github.com/tdurnford/react-snapshot-context.git"
   },
   "keywords": [
-    "higher order",
-    "hoc",
-    "hook",
+    "react",
+    "context",
+    "state-management",
+    "snapshot",
+    "provider",
+    "react-hooks",
+    "react-context",
+    "immer",
+    "state",
     "hooks",
-    "react"
+    "javascript",
+    "typescript",
+    "react-components",
+    "context-api",
+    "react-state",
+    "efficient-rendering"
   ],
   "author": "TJ Durnford (https://github.com/tdurnford)",
   "license": "MIT",
