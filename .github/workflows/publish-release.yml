@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        package-name: [react-create-dialog-context]
+        package-name: [react-snapshot-context]
 
     steps:
       - uses: actions/checkout@v3

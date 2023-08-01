@@ -12,7 +12,7 @@ jobs:
     strategy:
       matrix:
         node-version: [16.x]
-        package-name: [react-create-dialog-context]
+        package-name: [react-snapshot-context]
 
     steps:
       - uses: actions/checkout@v3
@@ -54,7 +54,7 @@ jobs:
 
     strategy:
       matrix:
-        package-name: [react-create-dialog-context]
+        package-name: [react-snapshot-context]
 
     steps:
       - name: Download tarball artifact
@@ -89,7 +89,7 @@ jobs:
   #   strategy:
   #     matrix:
   #       node-version: [16.x]
-  #       package-name: [react-create-dialog-context]
+  #       package-name: [react-snapshot-context]
 
   #   steps:
   #     - uses: actions/checkout@v3
