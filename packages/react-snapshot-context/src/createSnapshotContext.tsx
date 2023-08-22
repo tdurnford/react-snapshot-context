@@ -17,8 +17,15 @@ export type ContextValue<T> = {
 };
 
 type Props<T> = {
-  value: T;
-};
+  onChange?: (value: T) => void;
+} & (
+  | {
+      value: T;
+    }
+  | {
+      initialValue: T;
+    }
+);
 
 export type SnapshotContext<T> = Omit<ReturnType<typeof createContext<ContextValue<T>>>, 'Provider'> & {
   Provider: Provider<T>;
@@ -76,20 +83,27 @@ export const createSnapshotContext = <T,>(): SnapshotContext<T> => {
 
   const BaseProvider = BaseContext.Provider;
 
-  const SnapshotProvider = ({ children, value }: PropsWithChildren<Props<T>>) => {
-    const state = useRef<T>(value);
+  const SnapshotProvider = (props: PropsWithChildren<Props<T>>) => {
+    const { children, onChange } = props;
+    const state = useRef<T>('value' in props ? props.value : props.initialValue);
     const listeners = useRef(new Set<() => void>());
 
     const getSnapshot = useCallback<ContextValue<T>['getSnapshot']>(() => {
       return state.current;
     }, []);
 
-    const setSnapshot = useCallback<ContextValue<T>['setSnapshot']>(updatedState => {
-      const updated =
-        typeof updatedState === 'function' ? produce(state.current, updatedState as (draft: T) => void) : updatedState;
-      state.current = updated;
-      listeners.current.forEach(listener => listener());
-    }, []);
+    const setSnapshot = useCallback<ContextValue<T>['setSnapshot']>(
+      updatedState => {
+        const updated =
+          typeof updatedState === 'function'
+            ? produce(state.current, updatedState as (draft: T) => void)
+            : updatedState;
+        state.current = updated;
+        listeners.current.forEach(listener => listener());
+        onChange?.(updated);
+      },
+      [onChange]
+    );
 
     const subscribe = useCallback<ContextValue<T>['subscribe']>(listener => {
       listeners.current.add(listener);
@@ -98,8 +112,10 @@ export const createSnapshotContext = <T,>(): SnapshotContext<T> => {
     }, []);
 
     useEffect(() => {
-      setSnapshot(value);
-    }, [value]);
+      if ('value' in props) {
+        setSnapshot(props.value);
+      }
+    }, ['value' in props ? props.value : undefined]);
 
     const contextValue = useMemo<ContextValue<T>>(
       () => ({
