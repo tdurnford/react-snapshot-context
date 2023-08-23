@@ -1,4 +1,5 @@
 import React, {
+  type FC,
   createContext,
   type PropsWithChildren,
   type Provider,
@@ -9,6 +10,7 @@ import React, {
 } from 'react';
 
 import { produce } from 'immer';
+import isEqual from 'lodash/isEqual';
 
 export type ContextValue<T> = {
   getSnapshot: () => T;
@@ -28,7 +30,7 @@ type Props<T> = {
 );
 
 export type SnapshotContext<T> = Omit<ReturnType<typeof createContext<ContextValue<T>>>, 'Provider'> & {
-  Provider: Provider<T>;
+  Provider: FC<Props<T>>;
 };
 
 /**
@@ -112,7 +114,7 @@ export const createSnapshotContext = <T,>(): SnapshotContext<T> => {
     }, []);
 
     useEffect(() => {
-      if ('value' in props) {
+      if ('value' in props && !isEqual(props.value, state.current)) {
         setSnapshot(props.value);
       }
     }, ['value' in props ? props.value : undefined]);
