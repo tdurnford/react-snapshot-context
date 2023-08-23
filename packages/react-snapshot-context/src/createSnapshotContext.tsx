@@ -3,6 +3,7 @@ import React, {
   createContext,
   type PropsWithChildren,
   type Provider,
+  type ReactNode,
   useCallback,
   useEffect,
   useMemo,
@@ -19,6 +20,7 @@ export type ContextValue<T> = {
 };
 
 type Props<T> = {
+  children?: ReactNode;
   onChange?: (value: T) => void;
 } & (
   | {
