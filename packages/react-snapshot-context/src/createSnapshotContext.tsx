@@ -36,6 +36,19 @@ export type SnapshotContext<T> = Omit<ReturnType<typeof createContext<ContextVal
 };
 
 /**
+ * The arguments that can be passed to the `createSnapshotContext` function.
+ *
+ * Both the default value and options are optional. However, if you want to suppress
+ * errors and allow the snapshot hooks to be used outside the of the context, you must
+ * provide a default value.
+ */
+type Args<T> =
+  | []
+  | [defaultValue: T]
+  | [defaultValue?: T, options?: { suppressErrors?: false }]
+  | [defaultValue: T, options: { suppressErrors?: true }];
+
+/**
  * Creates a Snapshot context. This pattern brings several benefits:
  * 1. It provides a way to share state across multiple components without
  *    prop drilling.
@@ -72,16 +85,26 @@ export type SnapshotContext<T> = Omit<ReturnType<typeof createContext<ContextVal
  *   <MyComponent />
  * </NumberContext.SnapshotProvider>
  */
-export const createSnapshotContext = <T,>(): SnapshotContext<T> => {
+export const createSnapshotContext = <T,>(...args: Args<T>): SnapshotContext<T> => {
+  const [defaultValue, options] = args;
+
   const BaseContext = createContext<ContextValue<T>>({
     getSnapshot() {
-      throw new Error('Cannot be accessed outside of snapshot provider');
+      if (!options?.suppressErrors) {
+        throw new Error('Cannot be accessed outside of snapshot provider');
+      }
+      return defaultValue as T;
     },
     setSnapshot() {
-      throw new Error('Cannot be accessed outside of snapshot provider');
+      if (!options?.suppressErrors) {
+        throw new Error('Cannot be accessed outside of snapshot provider');
+      }
     },
     subscribe() {
-      throw new Error('Cannot be accessed outside of snapshot provider');
+      if (!options?.suppressErrors) {
+        throw new Error('Cannot be accessed outside of snapshot provider');
+      }
+      return () => void 0;
     }
   });
 
